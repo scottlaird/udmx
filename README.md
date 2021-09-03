@@ -28,3 +28,7 @@ func main() {
   udmx.Set(5, 17)
 }
 ```
+
+## Disclaimer
+
+This is not an official Google project.
