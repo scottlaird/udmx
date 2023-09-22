@@ -66,9 +66,6 @@ func NewUDMXDevice(ctx *gousb.Context) (*UDMXDevice, error) {
 // Address is a 1-based user-visible DMX address, even though the DMX
 // wire format is 0-based.  To set device #5 to 7, call SetDMX(5, 7)
 func (d *UDMXDevice) Set(address, value uint16) error {
-	_, err := d.Dev.Control(gousb.ControlOut|gousb.ControlVendor|gousb.ControlDevice, 1, value, address-1, nil)
-	if err != nil {
-		panic(err)
-	}
-	return nil
+	_, err := d.Dev.Control(gousb.ControlOut|gousb.ControlVendor|gousb.ControlDevice, 1, value, address-1, []byte{})
+	return err
 }
