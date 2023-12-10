@@ -50,7 +50,7 @@ func NewUDMXDevice(ctx *gousb.Context) (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &Device{
 		Dev: dev,
 	}, nil
