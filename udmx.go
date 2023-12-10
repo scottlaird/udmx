@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-Package udmx provides a minimal insterface for sending DMX messages
-via a cheap uDMX USB interface.
-
-Supported devices include https://www.amazon.com/dp/B07GT3S6V6 and
-similar hardware.
-
-Inspired by https://github.com/markusb/uDMX-linux
-*/
-
+// Package udmx provides a minimal insterface for sending DMX messages
+// via a cheap uDMX USB interface.
+//
+// Supported devices include https://www.amazon.com/dp/B07GT3S6V6 and
+// similar hardware.
+//
+// Inspired by https://github.com/markusb/uDMX-linux
 package udmx
 
 import (
@@ -29,13 +26,13 @@ import (
 	"github.com/google/gousb"
 )
 
-// UDMXDevice describes a USB-connected uDMX device.
-type UDMXDevice struct {
+// Device describes a USB-connected uDMX device.
+type Device struct {
 	Dev *gousb.Device
 }
 
 // NewUDMXDevice creates a new uDMX device.
-func NewUDMXDevice(ctx *gousb.Context) (*UDMXDevice, error) {
+func NewUDMXDevice(ctx *gousb.Context) (*Device, error) {
 
 	dev, err := ctx.OpenDeviceWithVIDPID(0x16c0, 0x5dc)
 	if err != nil {
@@ -43,20 +40,20 @@ func NewUDMXDevice(ctx *gousb.Context) (*UDMXDevice, error) {
 	}
 
 	if m, _ := dev.Manufacturer(); m != "www.anyma.ch" {
-		return nil, errors.New("Found possible uDMX device but wrong manufacturer string found.")
+		return nil, errors.New("found possible uDMX device but wrong manufacturer string found")
 	}
 
 	if dev == nil {
-		return nil, errors.New("Could not find uDMX device.")
+		return nil, errors.New("could not find uDMX device")
 	}
 
 	if err != nil {
 		return nil, err
-	} else {
-		return &UDMXDevice{
-			Dev: dev,
-		}, nil
 	}
+	
+	return &Device{
+		Dev: dev,
+	}, nil
 }
 
 // Set sends a DMX message to `address` with a value of `value`.
@@ -65,7 +62,7 @@ func NewUDMXDevice(ctx *gousb.Context) (*UDMXDevice, error) {
 //
 // Address is a 1-based user-visible DMX address, even though the DMX
 // wire format is 0-based.  To set device #5 to 7, call SetDMX(5, 7)
-func (d *UDMXDevice) Set(address, value uint16) error {
+func (d *Device) Set(address, value uint16) error {
 	_, err := d.Dev.Control(gousb.ControlOut|gousb.ControlVendor|gousb.ControlDevice, 1, value, address-1, []byte{})
 	return err
 }
